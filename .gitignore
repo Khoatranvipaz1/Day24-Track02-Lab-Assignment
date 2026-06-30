@@ -1,0 +1,8 @@
+# Gói nộp bài (build artifact) — không commit vào repo
+lab24_submission_*.zip
+*.zip
+
+# Môi trường ảo / cache
+**/.venv/
+**/__pycache__/
+*.pyc
