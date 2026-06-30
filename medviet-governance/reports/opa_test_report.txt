@@ -1,0 +1,13 @@
+OPA Policy Test Report — opa_policy.rego
+OPA version: Version: 1.18.1
+Syntax check: PASS
+
+Case (role/resource/action -> allow):
+  admin        patient_data         delete  -> true
+  ml_engineer  training_data        read    -> true
+  ml_engineer  production_data      delete  -> false
+  data_analyst aggregated_metrics   read    -> true
+  data_analyst reports              write   -> true
+  data_analyst patient_data         read    -> false
+  intern       sandbox_data         write   -> true
+  intern       patient_data         read    -> false

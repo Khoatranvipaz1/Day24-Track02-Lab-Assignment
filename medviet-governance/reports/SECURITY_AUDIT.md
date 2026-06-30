@@ -28,12 +28,16 @@ Ngày chạy: 2026-06-30 · Môi trường: Python 3.10 (`.venv`)
 
   **Giảm thiểu:** CVE chỉ ảnh hưởng OpenSSL tĩnh trong wheel; có thể build cryptography từ sdist với OpenSSL đã vá, hoặc chờ presidio nới ràng buộc. Theo dõi để nâng cấp khi presidio hỗ trợ.
 
-## 5. Các tool cần binary ngoài (chưa chạy trên môi trường này)
+## 5. OPA Policy (ABAC) — đã chạy thật
+- OPA **v1.18.1**, `opa check` PASS, **8/8 case đúng** — [opa_test_report.txt](opa_test_report.txt)
+- Các deny quan trọng đã verify: `ml_engineer/production_data/delete → false`, `data_analyst/patient_data → false`, `intern/patient_data → false`.
+
+## 6. Các tool cần binary ngoài
 | Tool | Trạng thái | Cách cài để chạy |
 |---|---|---|
-| trufflehog (Go) | thay bằng `secret_scan.py` | `scoop install trufflehog` hoặc binary từ GitHub release |
-| git-secrets | hook có fallback | `git clone awslabs/git-secrets && make install` |
-| OPA | policy `policies/opa_policy.rego` đã viết & verify logic | `choco install opa` rồi `opa eval ...` |
+| OPA | ✅ **đã chạy** (8/8 case pass) | binary đã tải & test |
+| trufflehog (Go) | thay bằng `secret_scan.py` (đã chạy) | `scoop install trufflehog` hoặc binary từ GitHub release |
+| git-secrets | hook có fallback (đã chạy) | `git clone awslabs/git-secrets && make install` |
 
 ## Tổng kết
 Pass tất cả hạng mục security audit có thể chạy được: **pytest 6/6, Bandit sạch, secret scan sạch + chặn được credential, CVE chỉ còn 1 (ràng buộc presidio, đã tài liệu hoá).**
