@@ -14,12 +14,14 @@ fake = Faker("vi_VN")
 
 def _fake_cccd() -> str:
     """Sinh số CCCD giả 12 chữ số."""
-    return "".join(random.choices("0123456789", k=12))
+    # nosec B311 - chỉ sinh dữ liệu giả để thay thế PII, không dùng cho mục đích bảo mật
+    return "".join(random.choices("0123456789", k=12))  # nosec B311
 
 
 def _fake_phone() -> str:
     """Sinh số ĐT di động VN giả (0 + [3579/8] + 8 số)."""
-    return "0" + random.choice("35789") + "".join(random.choices("0123456789", k=8))
+    # nosec B311 - dữ liệu giả, không phải token bảo mật
+    return "0" + random.choice("35789") + "".join(random.choices("0123456789", k=8))  # nosec B311
 
 
 class MedVietAnonymizer:

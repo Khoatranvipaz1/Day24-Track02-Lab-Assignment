@@ -19,7 +19,7 @@ def sample_df():
 class TestPIIDetection:
 
     def test_cccd_detected(self, anonymizer):
-        text = "Bệnh nhân Nguyen Van A, CCCD: 012345678901"
+        text = "Bệnh nhân Nguyen Van A, CCCD: 012345678901"  # pragma: allowlist secret
         results = anonymizer.analyzer.analyze(text=text, language="vi",
                                                entities=["VN_CCCD"])
         assert len(results) >= 1

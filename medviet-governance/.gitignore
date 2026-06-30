@@ -17,5 +17,4 @@ venv/
 # GE / artifacts
 gx/
 mlflow.db
-reports/*.json
-reports/*.txt
+# Lưu ý: reports/ LÀ deliverable nộp bài nên được commit (không ignore).
