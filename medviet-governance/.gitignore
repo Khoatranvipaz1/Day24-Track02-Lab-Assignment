@@ -1,0 +1,21 @@
+# Secrets / keys — KHÔNG bao giờ commit
+.vault_key
+.vault_key*
+*.pem
+*.key
+
+# Dữ liệu gốc chứa PII — chỉ commit data/processed/
+data/raw/*.csv
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+
+# GE / artifacts
+gx/
+mlflow.db
+reports/*.json
+reports/*.txt

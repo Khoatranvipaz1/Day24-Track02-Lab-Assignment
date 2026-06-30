@@ -1,0 +1,8 @@
+# Artifacts sinh ra khi chạy notebook — không commit
+.vault_key_demo
+.vault_key*
+.spacy_models/
+__pycache__/
+.ipynb_checkpoints/
+.venv/
+venv/

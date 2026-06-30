@@ -5,6 +5,7 @@ import random
 
 fake = Faker("vi_VN")
 Faker.seed(42)
+random.seed(42)  # reproducible cccd / so_dien_thoai
 
 def generate_patients(n=200):
     records = []

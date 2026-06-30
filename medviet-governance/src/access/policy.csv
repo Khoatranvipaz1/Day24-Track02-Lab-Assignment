@@ -1,25 +1,34 @@
 # Format: p, role, resource, action
+# ===== admin: toàn quyền (superuser) =====
 p, admin, patient_data, read
 p, admin, patient_data, write
 p, admin, patient_data, delete
 p, admin, model_artifacts, read
 p, admin, model_artifacts, write
+p, admin, training_data, read
+p, admin, training_data, write
+p, admin, aggregated_metrics, read
+p, admin, reports, write
 
+# ===== ml_engineer =====
 p, ml_engineer, training_data, read
 p, ml_engineer, model_artifacts, read
 p, ml_engineer, model_artifacts, write
-# TODO: ml_engineer KHÔNG được delete production data
-# TODO: ml_engineer KHÔNG được đọc raw PII
+p, ml_engineer, aggregated_metrics, read
+# Cố ý KHÔNG cấp: patient_data (raw PII) và delete production_data
+#   => mọi request đó sẽ rơi vào default-deny (casbin trả 403).
 
+# ===== data_analyst =====
 p, data_analyst, aggregated_metrics, read
 p, data_analyst, reports, write
-# TODO: data_analyst KHÔNG được đọc raw PII
+# Cố ý KHÔNG cấp: patient_data / training_data (raw PII) => default-deny.
 
+# ===== intern =====
 p, intern, sandbox_data, read
 p, intern, sandbox_data, write
-# TODO: intern KHÔNG được access production
+# Cố ý KHÔNG cấp: bất kỳ resource production nào => default-deny.
 
-# Role inheritance
+# ===== Role inheritance (user -> role) =====
 g, alice, admin
 g, bob, ml_engineer
 g, carol, data_analyst

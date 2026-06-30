@@ -9,10 +9,11 @@ rules:
     action: allow
     description: "ML engineers may read anonymized training data"
 
-  - name: allow-read-aggregated
-    condition: "action.type == 'read' and action.dataset == 'aggregated'"
+  # BÀI 6.1 — data_analyst CHỈ được đọc dataset 'aggregated' (không PII)
+  - name: allow-data-analyst-aggregated
+    condition: "action.role == 'data_analyst' and action.type == 'read' and action.dataset == 'aggregated'"
     action: allow
-    description: "Analysts may read aggregated metrics (no PII)"
+    description: "Data analysts may only read aggregated metrics (no PII)"
 
   - name: block-raw-pii
     condition: "action.dataset == 'raw_pii'"
@@ -24,7 +25,13 @@ rules:
     action: deny
     description: "NĐ13 data localization — no export outside Vietnam"
 
+  # BÀI 6.1 — mọi hành động delete phải có người phê duyệt trước
+  - name: require-approval-delete
+    condition: "action.type == 'delete'"
+    action: require_approval
+    description: "Human-in-the-loop approval bắt buộc trước khi xóa dữ liệu"
+
   - name: block-destructive
-    condition: "action.type in ['delete', 'drop', 'truncate']"
+    condition: "action.type in ['drop', 'truncate']"
     action: deny
-    description: "Destructive data operations are never allowed for agents"
+    description: "Drop/truncate không bao giờ được phép cho agent"
