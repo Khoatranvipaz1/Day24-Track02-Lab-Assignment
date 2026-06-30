@@ -16,7 +16,7 @@ enforcer = casbin.Enforcer("src/access/model.conf", "src/access/policy.csv")
 
 def get_current_user(authorization: Optional[str] = Header(None)) -> dict:
     """
-    TODO: Parse Bearer token và trả về user info.
+Parse Bearer token và trả về user info.
     Raise HTTPException 401 nếu token không hợp lệ.
     """
     if not authorization or not authorization.startswith("Bearer "):
@@ -32,7 +32,7 @@ def get_current_user(authorization: Optional[str] = Header(None)) -> dict:
 
 def require_permission(resource: str, action: str):
     """
-    TODO: Decorator kiểm tra RBAC permission.
+Decorator kiểm tra RBAC permission.
     Dùng casbin enforcer để check (role, resource, action).
     Raise HTTPException 403 nếu không có quyền.
     """

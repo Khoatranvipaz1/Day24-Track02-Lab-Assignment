@@ -18,7 +18,7 @@ allow if {
     input.action in {"read", "write"}
 }
 
-# TODO: ML Engineer KHÔNG được delete production data
+# ML Engineer KHÔNG được delete production data
 deny if {
     input.user.role == "ml_engineer"
     input.resource == "production_data"

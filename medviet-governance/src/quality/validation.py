@@ -5,7 +5,7 @@ from great_expectations.core.expectation_suite import ExpectationSuite
 
 def build_patient_expectation_suite() -> ExpectationSuite:
     """
-    TODO: Tạo expectation suite cho anonymized patient data.
+Tạo expectation suite cho anonymized patient data.
     """
     context = gx.get_context()
     suite = context.add_expectation_suite("patient_data_suite")
@@ -54,7 +54,7 @@ def build_patient_expectation_suite() -> ExpectationSuite:
 
 def validate_anonymized_data(filepath: str) -> dict:
     """
-    TODO: Validate anonymized data.
+Validate anonymized data.
     Trả về dict: {"success": bool, "failed_checks": list, "stats": dict}
     """
     df = pd.read_csv(filepath)
