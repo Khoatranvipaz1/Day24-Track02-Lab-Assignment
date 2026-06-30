@@ -1,54 +1,50 @@
 # src/quality/validation.py
 import pandas as pd
 import great_expectations as gx
-from great_expectations.core.expectation_suite import ExpectationSuite
+import great_expectations.expectations as gxe
+from great_expectations import ExpectationSuite
 
 def build_patient_expectation_suite() -> ExpectationSuite:
-    """
-Tạo expectation suite cho anonymized patient data.
-    """
-    context = gx.get_context()
-    suite = context.add_expectation_suite("patient_data_suite")
+    """Tạo expectation suite cho patient data (Great Expectations 1.x API).
 
-    # Lấy validator
-    df = pd.read_csv("data/raw/patients_raw.csv")
-    validator = context.sources.pandas_default.read_dataframe(df)
+    Thêm 6 expectations và chạy validate trên dữ liệu raw.
+    """
+    context = gx.get_context()  # ephemeral context
 
-    # --- TASK: Thêm các expectations ---
+    # Đăng ký nguồn pandas + batch từ DataFrame (đọc cccd dạng str giữ số 0 đầu)
+    df = pd.read_csv(
+        "data/raw/patients_raw.csv",
+        dtype={"cccd": str, "so_dien_thoai": str},
+    )
+    data_source = context.data_sources.add_pandas(name="medviet_pandas")
+    asset = data_source.add_dataframe_asset(name="patients")
+    batch_def = asset.add_batch_definition_whole_dataframe("batch_def")
+
+    # Tạo suite + 6 expectations
+    suite = context.suites.add(ExpectationSuite(name="patient_data_suite"))
 
     # 1. patient_id không được null
-    validator.expect_column_values_to_not_be_null("patient_id")
-
+    suite.add_expectation(gxe.ExpectColumnValuesToNotBeNull(column="patient_id"))
     # 2. cccd phải có đúng 12 ký tự
-    validator.expect_column_value_lengths_to_equal(
-        column="cccd",
-        value=12
-    )
-
+    suite.add_expectation(gxe.ExpectColumnValueLengthsToEqual(column="cccd", value=12))
     # 3. ket_qua_xet_nghiem phải trong khoảng [0, 50]
-    validator.expect_column_values_to_be_between(
-        column="ket_qua_xet_nghiem",
-        min_value=0,
-        max_value=50
-    )
-
+    suite.add_expectation(gxe.ExpectColumnValuesToBeBetween(
+        column="ket_qua_xet_nghiem", min_value=0, max_value=50))
     # 4. benh phải thuộc danh sách hợp lệ
-    valid_conditions = ["Tiểu đường", "Huyết áp cao", "Tim mạch", "Khỏe mạnh"]
-    validator.expect_column_values_to_be_in_set(
+    suite.add_expectation(gxe.ExpectColumnValuesToBeInSet(
         column="benh",
-        value_set=valid_conditions
-    )
-
+        value_set=["Tiểu đường", "Huyết áp cao", "Tim mạch", "Khỏe mạnh"]))
     # 5. email phải match regex pattern
-    validator.expect_column_values_to_match_regex(
-        column="email",
-        regex=r"^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$"
-    )
-
+    suite.add_expectation(gxe.ExpectColumnValuesToMatchRegex(
+        column="email", regex=r"^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$"))
     # 6. Không được có duplicate patient_id
-    validator.expect_column_values_to_be_unique(column="patient_id")
+    suite.add_expectation(gxe.ExpectColumnValuesToBeUnique(column="patient_id"))
 
-    validator.save_expectation_suite()
+    # Chạy validate để chứng minh suite hoạt động
+    batch = batch_def.get_batch(batch_parameters={"dataframe": df})
+    validation_result = batch.validate(suite)
+    print(f"GE validation success: {validation_result.success}")
+
     return suite
 
 

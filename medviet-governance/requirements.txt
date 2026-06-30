@@ -10,7 +10,7 @@ uvicorn>=0.22.0
 # cryptography: presidio-anonymizer ghim <47.0.0 nên KHÔNG nâng lên 48.0.1 được
 # (còn 1 CVE GHSA-537c-gmf6-5ccf — rủi ro chấp nhận, xem reports/SECURITY_AUDIT.md)
 cryptography>=46.0.4,<47.0.0
-great-expectations>=0.17.0
+great-expectations>=1.0,<2.0   # validation.py dùng API GE 1.x
 pytest>=7.0.0
 bandit>=1.7.0
 pip-audit>=2.5.0
