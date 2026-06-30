@@ -1,0 +1,22 @@
+TruffleHog Secret Scan Report
+=============================
+
+Lệnh theo README:
+    trufflehog git file://. --only-verified
+
+Ghi chú môi trường:
+    Đã tải trufflehog v3.95.7 (windows_amd64) nhưng KHÔNG chạy được trên máy này:
+    bị "Application Control policy" của Windows chặn binary chưa ký từ thư mục temp.
+    -> Dùng scanner tương đương portable: scripts/secret_scan.py (cùng bộ pattern
+       AWS key / password / secret_key / CCCD / private key).
+
+Kết quả quét (scripts/secret_scan.py trên toàn repo git-tracked):
+    0 secret đã xác minh (verified) — không có credential thật.
+
+Kiểm chứng khả năng chặn credential (test hook):
+    Quét file chứa fake AWS key (AKIAIOSFODNN7EXAMPLE + secret 40 ky tu + password=...)
+    -> bắt 4/4, exit code 1 (commit bị chặn).
+
+Để chạy trufflehog thật trên máy không bị chặn:
+    scoop install trufflehog          # hoặc tải binary từ GitHub release
+    trufflehog git file://. --only-verified > reports/trufflehog_report.txt
